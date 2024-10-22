@@ -4,7 +4,6 @@ import ReusableForm from '../../Components/Generic/Form';
 export default function Login() {
   const handleSubmit = (formData) => {
     console.log('Form submitted:', formData);
-    // Handle the form data
   };
 
   const fields = [
@@ -16,7 +15,7 @@ export default function Login() {
   return (
     <div>
       <ReusableForm 
-        title="Sign Up"
+        title="Sign In"
         fields={fields}
         onSubmit={handleSubmit}
       />
