@@ -1,10 +1,10 @@
 import React from 'react'
-import  Header  from '../../Components/Generic/Header'
+import { Page } from '../../Components/Generic/Page'
 
 export default function Home(){
   return (
-    <>
-    <Header/>
-    </>
+    <Page>
+      
+    </Page>
   )
 }

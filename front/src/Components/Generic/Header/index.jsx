@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-gray-100 bg-opacity-90 shadow-md">
       <div className="mx-auto px-4 py-4">
@@ -10,7 +13,7 @@ export default function Header() {
           <nav>
             <ul className="flex space-x-6">
               <li>
-                <button className="text-purple-700 hover:text-purple-900 px-4 py-2 rounded-lg hover:bg-purple-100 transition-colors">
+                <button onClick={navigate('/presence')} className="text-purple-700 hover:text-purple-900 px-4 py-2 rounded-lg hover:bg-purple-100 transition-colors">
                   Marcar Presença
                 </button>
               </li>

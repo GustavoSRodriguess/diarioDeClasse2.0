@@ -7,6 +7,7 @@ import Register from './Routes/Register';
 import reportWebVitals from './reportWebVitals';
 import Home from './Routes/Home';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'; // Certifique-se de importar isso
+import { Presence } from './Routes/Presence';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,6 +18,7 @@ root.render(
         <Route path='/login' element={<Login />}/>
         <Route path='/register' element={<Register />}/>
         <Route path='/forgot-password' element={<ForgotPwd />}/>
+        <Route path='/presence' element={<Presence />}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
