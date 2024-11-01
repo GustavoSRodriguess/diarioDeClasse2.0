@@ -10,7 +10,6 @@ export default function Header() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Se rolou mais de 70px, compara com última posição
       if (currentScrollY > 70) {
         setIsVisible(currentScrollY < lastScrollY);
       } else {
@@ -40,7 +39,7 @@ export default function Header() {
     >
       <div className="mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-purple-700 text-2xl font-semibold">Sistema de Presença</h1>
+          <h1  onClick={() => navigate('/')} className="cursor-pointer text-purple-700 text-2xl font-semibold">Sistema de Presença</h1>
 
           <nav>
             <ul className="flex space-x-6">

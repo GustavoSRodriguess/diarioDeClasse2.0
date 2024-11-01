@@ -6,7 +6,7 @@ import ForgotPwd from './Routes/ForgotPwd';
 import Register from './Routes/Register';
 import reportWebVitals from './reportWebVitals';
 import Home from './Routes/Home';
-import { BrowserRouter, Route, Routes } from 'react-router-dom'; // Certifique-se de importar isso
+import { BrowserRouter, Route, Routes } from 'react-router-dom'; 
 import { Presence } from './Routes/Presence';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,7 +14,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home />}/> {/* home */}
+        <Route path='/' element={<Home />}/>
         <Route path='/login' element={<Login />}/>
         <Route path='/register' element={<Register />}/>
         <Route path='/forgot-password' element={<ForgotPwd />}/>
