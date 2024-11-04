@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { UserRound, LogOut, Settings, User } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Dropdown } from '../../Dropdown';
 
 export default function Header() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,12 +23,45 @@ export default function Header() {
       setLastScrollY(currentScrollY);
     };
 
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [lastScrollY]);
+
+  const handleLogout = () => {
+    console.log('logout');
+    setIsDropdownOpen(false);
+  };
+
+  const userMenuItems = [
+    {
+      label: 'Perfil',
+      icon: <User className="h-4 w-4" />,
+      onClick: () => navigate('/profile')
+    },
+    {
+      label: 'Configurações',
+      icon: <Settings className="h-4 w-4" />,
+      onClick: () => navigate('/settings')
+    },
+    { type: 'separator' },
+    {
+      label: 'Sair',
+      icon: <LogOut className="h-4 w-4" />,
+      onClick: handleLogout,
+      danger: true
+    }
+  ];
 
   return (
     <header
@@ -39,10 +76,12 @@ export default function Header() {
     >
       <div className="mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <h1  onClick={() => navigate('/')} className="cursor-pointer text-purple-700 text-2xl font-semibold">Sistema de Presença</h1>
+          <h1 onClick={() => navigate('/')} className="cursor-pointer text-purple-700 text-2xl font-semibold">
+            Sistema de Presença
+          </h1>
 
           <nav>
-            <ul className="flex space-x-6">
+            <ul className="flex space-x-6 items-center">
               <li>
                 <button
                   onClick={() => navigate('/presence')}
@@ -66,6 +105,17 @@ export default function Header() {
                 >
                   Verificar Presença
                 </button>
+              </li>
+              <li>
+                <Dropdown
+                  trigger={
+                    <div className="text-purple-700 hover:text-purple-900 p-2 rounded-lg hover:bg-purple-100 transition-colors">
+                      <UserRound className="h-6 w-6" />
+                    </div>
+                  }
+                  header="Minha Conta"
+                  items={userMenuItems}
+                />
               </li>
             </ul>
           </nav>

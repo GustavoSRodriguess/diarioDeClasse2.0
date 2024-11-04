@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Table = ({ children, className = "" }) => {
     return (
-        <div className={`mt-6 opoverflow-x-auto rounded-lg border border-gray-200 bg-white ${className}`}>
+        <div className={`mt-6 overflow-x-auto rounded-lg border border-gray-200 bg-white ${className}`}>
             <table className="min-w-full divide-y divide-gray-200">
                 {children}
             </table>
@@ -26,9 +26,9 @@ export const TableBody = ({ children, className = "" }) => {
     );
 };
 
-export const TableRow = ({ children, className = "" }) => {
+export const TableRow = ({ children, className = "", onClick, ...props }) => {
     return (
-        <tr className={`hover:bg-gray-50 ${className}`}>
+        <tr className={`hover:bg-gray-50 ${className}`} onClick={onClick} {...props}>
             {children}
         </tr>
     );
