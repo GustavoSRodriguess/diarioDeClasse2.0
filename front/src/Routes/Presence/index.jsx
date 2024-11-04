@@ -3,8 +3,12 @@ import { Page } from '../../Components/Generic/Page';
 
 import { CalendarDays, Users, ClipboardCheck } from "lucide-react";
 import { Card } from '../../Components/Generic/Card';
+import { useNavigate } from 'react-router-dom';
 
 export const Presence = () => {
+
+    const navigate = useNavigate();
+
     const cardData = [
         {
             title: "Turma A",
@@ -16,7 +20,7 @@ export const Presence = () => {
             ],
             action: "Fazer Chamada",
             onClick: () => {
-                console.log("Ir para página de chamada");
+                navigate('check')
             }
         },
         {

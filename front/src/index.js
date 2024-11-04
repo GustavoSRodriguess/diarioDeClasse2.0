@@ -8,6 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import Home from './Routes/Home';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'; 
 import { Presence } from './Routes/Presence';
+import { PresenceCheck } from './Routes/Presence/PresenceCheck';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,6 +20,7 @@ root.render(
         <Route path='/register' element={<Register />}/>
         <Route path='/forgot-password' element={<ForgotPwd />}/>
         <Route path='/presence' element={<Presence />}/>
+        <Route path='/presence/check' element={<PresenceCheck />}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

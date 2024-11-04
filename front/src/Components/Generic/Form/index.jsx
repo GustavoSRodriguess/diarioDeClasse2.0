@@ -3,10 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 
 const ReusableForm = ({ 
   onSubmit, 
-  title = "Form",
+  title,
   fields = [
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'password', label: 'Password', type: 'password', required: true }
+    { name: 'inputName', label: 'inputLabel', type: 'inputType', required: true },
   ]
 }) => {
   const [formData, setFormData] = useState({});
