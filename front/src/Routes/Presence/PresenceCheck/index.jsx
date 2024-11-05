@@ -160,16 +160,18 @@ export const PresenceCheck = ({ classId = 'A' }) => {
                                             <TableCell>{student.number}</TableCell>
                                             <TableCell>{student.name}</TableCell>
                                             <TableCell align="center">
-                                                <span className={`font-bold ${failed
+                                                <div className='flex justify-center'>
+                                                    <span className={`font-bold justify-center ${failed
                                                         ? 'text-red-500'
                                                         : isAtRisk(student.absences)
                                                             ? 'text-yellow-500'
                                                             : 'text-purple-500'
-                                                    }`}>
-                                                    {student.absences}
-                                                </span>
+                                                        }`}>
+                                                        {student.absences}
+                                                    </span>
+                                                </div>
                                             </TableCell>
-                                            <TableCell align="center">
+                                            <TableCell className='flex justify-center'>
                                                 {failed ? (
                                                     <Badge variant="danger" className="gap-1">
                                                         <AlertCircle className="h-4 w-4 mr-1" />
