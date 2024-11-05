@@ -31,7 +31,6 @@ export default function Login() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <ReusableForm
         title="Entrar no Sistema"
         fields={fields}
@@ -40,6 +39,5 @@ export default function Login() {
         isLoading={isLoading}
         submitText="Entrar"
       />
-    </div>
   );
 }
