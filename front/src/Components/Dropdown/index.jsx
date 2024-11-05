@@ -5,9 +5,7 @@ export const Dropdown = ({
     trigger,
     items,
     header,
-    className = "",
-    itemClassName = "",
-    headerClassName = ""
+    className = ""
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -53,15 +51,13 @@ export const Dropdown = ({
                                         item.onClick?.();
                                         setIsOpen(false);
                                     }}
-                                    className={`
-                    w-full text-left px-4 py-2 text-sm
-                    flex items-center
-                    ${item.danger
+                                    className={`w-full text-left px-4 py-2 text-sm flex items-center
+                                        ${item.danger
                                             ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50'
                                             : 'text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/50'
                                         }
-                    ${item.className || ''}
-                  `}
+                                        ${item.className || ''}
+                                    `}
                                     disabled={item.disabled}
                                 >
                                     {item.icon && <span className="mr-2">{item.icon}</span>}

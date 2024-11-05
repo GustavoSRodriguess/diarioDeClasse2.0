@@ -10,7 +10,7 @@ import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { Presence } from './Routes/Presence';
 import { PresenceCheck } from './Routes/Presence/PresenceCheck';
 import { AuthProvider } from './Contexts/AuthContext';
-import { ProtectedRoute } from './Components/ProtectedRoute.jsx';
+import { ProtectedRoute } from './Components/ProtectedRoute/index.jsx';
 import { ThemeProvider } from './Contexts/ThemeContext.jsx';
 
 const ProtectedLayout = () => {
