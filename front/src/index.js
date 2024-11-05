@@ -11,6 +11,7 @@ import { Presence } from './Routes/Presence';
 import { PresenceCheck } from './Routes/Presence/PresenceCheck';
 import { AuthProvider } from './Contexts/AuthContext';
 import { ProtectedRoute } from './Components/ProtectedRoute.jsx';
+import { ThemeProvider } from './Contexts/ThemeContext.jsx';
 
 const ProtectedLayout = () => {
   return (
@@ -23,25 +24,27 @@ const ProtectedLayout = () => {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
 
-          {/* publicas */}
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />}/>
-          <Route path='/forgot-password' element={<ForgotPwd />} />
-          
-          {/* protegidas */}
-          <Route element={<ProtectedLayout/>}>
-            <Route path='/' element={<Home />}/>
-            <Route path='/presence' element={<Presence />}/>
-            <Route path='/presence/check' element={<PresenceCheck />}/>
-          </Route>
+            {/* publicas */}
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />}/>
+            <Route path='/forgot-password' element={<ForgotPwd />} />
+            
+            {/* protegidas */}
+            <Route element={<ProtectedLayout/>}>
+              <Route path='/' element={<Home />}/>
+              <Route path='/presence' element={<Presence />}/>
+              <Route path='/presence/check' element={<PresenceCheck />}/>
+            </Route>
 
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 
