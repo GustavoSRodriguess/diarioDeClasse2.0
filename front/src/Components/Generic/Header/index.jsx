@@ -1,4 +1,4 @@
-import { UserRound, LogOut, Settings, User, Moon, Sun } from 'lucide-react';
+import { UserRound, LogOut, Settings, User, Moon, Sun, BadgeJapaneseYen } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown } from '../../Dropdown';
@@ -91,13 +91,16 @@ export default function Header() {
       `}
     >
       <div className="mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <h1
-            onClick={() => navigate('/')}
-            className="cursor-pointer text-purple-700 dark:text-purple-400 text-2xl font-semibold"
-          >
+        <div className="flex items-center justify-between text-purple-700">
+          <div onClick={() => navigate('/')} className='cursor-pointer flex inline-block items-center'>
+            <div className="text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 p-2 rounded-lg dark:hover:bg-purple-900 transition-colors">
+              <BadgeJapaneseYen className="h-6 w-6" />
+            </div>
+            <h1 className="text-purple-700 dark:text-purple-400 text-2xl font-semibold">
             Sistema de Presença
           </h1>
+          </div>
+
 
           <nav>
             <ul className="flex space-x-6 items-center">
