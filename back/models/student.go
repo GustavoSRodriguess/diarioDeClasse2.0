@@ -1,4 +1,5 @@
 // no idea if this is goin to work 
+// pior que nem sei se algum aluno teria acesso a esse sistema 
 package models
 
 import (

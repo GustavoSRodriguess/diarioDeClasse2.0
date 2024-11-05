@@ -2,9 +2,11 @@ import { UserRound, LogOut, Settings, User } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown } from '../../Dropdown';
+import { useAuth } from '../../../Contexts/AuthContext';
 
 export default function Header() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -39,8 +41,12 @@ export default function Header() {
   }, [lastScrollY]);
 
   const handleLogout = () => {
-    console.log('logout');
-    setIsDropdownOpen(false);
+    try {
+      logout();
+      navigate('/login');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const userMenuItems = [
