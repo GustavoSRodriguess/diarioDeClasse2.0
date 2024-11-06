@@ -65,7 +65,7 @@ export const PresenceCheck = ({ classId = 'A' }) => {
     const fetchStudentsData = async (classId) => {
         try {
             setLoading(true);
-            await new Promise(resolve => setTimeout(resolve, 1000));
+           // await new Promise(resolve => setTimeout(resolve, 1000));
             const data = mockStudentsByClass[classId] || [];
             setStudents(data);
             setError(null);
@@ -130,7 +130,7 @@ export const PresenceCheck = ({ classId = 'A' }) => {
             <div className="flex flex-col min-h-[calc(100vh-72px)]">
                 <div className="mt-5 flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-purple-700">Turma {classId}</h2>
-                    <div className="text-sm text-gray-600">
+                    <div className="dark:text-gray-300 text-sm text-gray-600">
                         Total de alunos: {students.length}
                     </div>
                 </div>
