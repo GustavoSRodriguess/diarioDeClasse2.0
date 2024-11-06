@@ -73,13 +73,13 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
+        <div className="dark:bg-gray-900 p-6 space-y-6 bg-gray-50 min-h-screen">
 
             {/* header de boas vindas */}
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">Bom dia, (nome do professor)!</h1>
-                    <p className="text-gray-600">Terça-feira, 5 de Novembro</p>
+                    <h1 className="dark:text-gray-200 text-2xl font-bold text-gray-800">Bom dia, (nome do professor)!</h1>
+                    <p className="dark:text-gray-400 text-gray-600">Terça-feira, 5 de Novembro</p>
                 </div>
                 <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
                     <Clock className="w-4 h-4" />
