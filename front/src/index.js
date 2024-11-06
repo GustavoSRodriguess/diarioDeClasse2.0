@@ -12,6 +12,7 @@ import { PresenceCheck } from './Routes/Presence/PresenceCheck';
 import { AuthProvider } from './Contexts/AuthContext';
 import { ProtectedRoute } from './Components/ProtectedRoute/index.jsx';
 import { ThemeProvider } from './Contexts/ThemeContext.jsx';
+import { UserPage } from './Routes/UserPage/index.jsx';
 
 const ProtectedLayout = () => {
   return (
@@ -38,6 +39,7 @@ root.render(
             <Route element={<ProtectedLayout/>}>
               <Route path='/' element={<Home />}/>
               <Route path='/presence' element={<Presence />}/>
+              <Route path='/profile' element={<UserPage />}/>
               <Route path='/presence/check' element={<PresenceCheck />}/>
             </Route>
 

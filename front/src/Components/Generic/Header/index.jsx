@@ -93,7 +93,7 @@ export default function Header() {
       <div className="mx-auto px-4 py-4">
         <div className="flex items-center justify-between text-purple-700">
           <div onClick={() => navigate('/')} className='cursor-pointer flex inline-block items-center'>
-            <div className="text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 p-2 rounded-lg dark:hover:bg-purple-900 transition-colors">
+            <div className="text-purple-700 dark:text-purple-400 p-2 rounded-lg transition-colors">
               <Cannabis className="h-6 w-6" />
             </div>
             <h1 className="text-purple-700 dark:text-purple-400 text-2xl font-semibold">
