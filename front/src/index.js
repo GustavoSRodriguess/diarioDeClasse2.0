@@ -13,6 +13,7 @@ import { AuthProvider } from './Contexts/AuthContext';
 import { ProtectedRoute } from './Components/ProtectedRoute/index.jsx';
 import { ThemeProvider } from './Contexts/ThemeContext.jsx';
 import { UserPage } from './Routes/UserPage/index.jsx';
+import { PresenceHistory } from './Routes/Presence/PresenceHistory/index.jsx';
 
 const ProtectedLayout = () => {
   return (
@@ -38,9 +39,10 @@ root.render(
             {/* protegidas */}
             <Route element={<ProtectedLayout/>}>
               <Route path='/' element={<Home />}/>
-              <Route path='/presence' element={<Presence />}/>
               <Route path='/profile' element={<UserPage />}/>
+              <Route path='/presence' element={<Presence />}/>
               <Route path='/presence/check' element={<PresenceCheck />}/>
+              <Route path='/presence/history' element={<PresenceHistory />}/>
             </Route>
 
           </Routes>
