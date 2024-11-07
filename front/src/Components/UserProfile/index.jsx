@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SubCard,
   CardContent,
@@ -30,9 +30,12 @@ export const UserProfile = () => {
   const [notifyAbsence, setNotifyAbsence] = useState(false);
   const [notifyClass, setNotifyClass] = useState(false);
   const [notifyPendency, setNotifyPendency] = useState(false);
-
+  const [gradeType, setGradeType] = useState(() => {
+    return localStorage.getItem('gradeType') || '1';
+  });
+  
   const { isDarkMode, toggleDarkMode } = useTheme();
-
+  
   const mockUser = {
     name: "Maria Silva",
     email: "maria.silva@escola.edu",
@@ -40,6 +43,10 @@ export const UserProfile = () => {
     department: "Matemática",
     avatar: "/api/placeholder/100/100"
   };
+  
+  useEffect(() => {
+    localStorage.setItem('gradetype', gradeType);
+  }, [gradeType]);
 
   const handleImageUpload = async (file) => {
     if (!file) {
@@ -62,8 +69,13 @@ export const UserProfile = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setGradeType(e.target.value)
+  }
+
   return (
     <div className="container mx-auto p-6 max-w-4xl">
+
       {/* Cabeçalho do Perfil */}
       <div className="mb-6 flex items-start justify-between">
         <div className="flex items-center gap-4">
@@ -148,10 +160,10 @@ export const UserProfile = () => {
               <CardContent className="dark:text-gray-300 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Formato de Notas</span>
-                  <select className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg text-sm">
-                    <option>0-10</option>
-                    <option>0-100</option>
-                    <option>A-F</option>
+                  <select onChange={handleChange} className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg text-sm">
+                    <option value={'1'}>0-10</option>
+                    <option value={'2'}>0-100</option>
+                    <option value={'3'}>A-F</option>
                   </select>
                 </div>
                 <div className="flex items-center justify-between">
