@@ -9,15 +9,17 @@ import {
     ChevronLeft,
     ChevronRight
 } from 'lucide-react';
-import { NewEventModal } from '../Generic/Modal';
+import { NewEventModal } from '../Generic/Modal/NewEventModal';
+
+// Esse vai ficar comentado pq é bem complexo
 
 const MONTHS = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
 
-// Mock de eventos
-const mockEvents = [
+// Mock de eventos como estado inicial
+const initialEvents = [
     {
         id: 1,
         title: "Prova de Matemática - 7º Ano",
@@ -63,7 +65,7 @@ export const AcademicCalendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
     const [showEventModal, setShowEventModal] = useState(false);
-    const [showNewEventModal, setShowNewEventModal] = useState(false);
+    const [events, setEvents] = useState(initialEvents);
 
     // Funções auxiliares para manipulação de datas
     const getDaysInMonth = (date) => {
@@ -83,6 +85,28 @@ export const AcademicCalendar = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
     };
 
+    // Função para criar novos eventos
+    const handleEventCreate = (eventData) => {
+        const baseId = events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1;
+
+        // Criar um evento para cada data selecionada
+        const newEvents = eventData.dates.map((date, index) => ({
+            id: baseId + index,
+            title: eventData.title,
+            description: eventData.description,
+            type: eventData.type,
+            date: date
+        }));
+
+        setEvents(prevEvents => [...prevEvents, ...newEvents]);
+        setShowEventModal(false);
+    };
+
+    // Função para deletar evento
+    const handleDeleteEvent = (eventId) => {
+        setEvents(events.filter(event => event.id !== eventId));
+    };
+
     // Renderiza os dias do calendário
     const renderCalendar = () => {
         const daysInMonth = getDaysInMonth(currentDate);
@@ -100,23 +124,35 @@ export const AcademicCalendar = () => {
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
             const dateString = date.toISOString().split('T')[0];
-            const dayEvents = mockEvents.filter(event => event.date === dateString);
+            const dayEvents = events.filter(event => event.date === dateString);
 
             days.push(
                 <div
                     key={day}
                     onClick={() => setSelectedDate(dateString)}
                     className={`h-24 border border-gray-200 dark:border-gray-700 p-2 cursor-pointer
-            hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors
-            ${selectedDate === dateString ? 'bg-purple-50 dark:bg-purple-900/20' : 'bg-white dark:bg-gray-800'}
-          `}
+                        hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors
+                        ${selectedDate === dateString ? 'bg-purple-50 dark:bg-purple-900/20' : 'bg-white dark:bg-gray-800'}
+                    `}
                 >
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start dark:text-gray-400">
                         <span className="text-sm font-medium">{day}</span>
                         {dayEvents.length > 0 && (
                             <div className="flex flex-wrap gap-1">
                                 {dayEvents.map(event => (
-                                    <div key={event.id} className="w-2 h-2 rounded-full bg-purple-500" />
+                                    <div
+                                        key={event.id}
+                                        className="w-2 h-2 rounded-full"
+                                        style={{
+                                            backgroundColor: {
+                                                avaliacao: '#9333EA',
+                                                feriado: '#DC2626',
+                                                reuniao: '#2563EB',
+                                                aula: '#16A34A',
+                                                evento: '#CA8A04'
+                                            }[event.type] || '#9333EA'
+                                        }}
+                                    />
                                 ))}
                             </div>
                         )}
@@ -137,7 +173,6 @@ export const AcademicCalendar = () => {
 
     return (
         <div className="container mx-auto p-6">
-            {/* Botão que abre a modal */}
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -148,7 +183,7 @@ export const AcademicCalendar = () => {
                     </p>
                 </div>
                 <button
-                    onClick={() => setShowNewEventModal(true)}
+                    onClick={() => setShowEventModal(true)}
                     className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
                 >
                     <Plus className="w-4 h-4" />
@@ -156,19 +191,19 @@ export const AcademicCalendar = () => {
                 </button>
             </div>
 
-            {/* Modal de novo evento */}
             <NewEventModal
-                isOpen={showNewEventModal}
-                onClose={() => setShowNewEventModal(false)}
+                isOpen={showEventModal}
+                onClose={() => setShowEventModal(false)}
+                onEventCreate={handleEventCreate}
+                selectedDates={selectedDate ? [selectedDate] : []}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Calendário */}
                 <div className="lg:col-span-3">
                     <SubCard>
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
+                                <div className="dark:text-gray-400 flex items-center gap-4">
                                     <button
                                         onClick={previousMonth}
                                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
@@ -188,8 +223,7 @@ export const AcademicCalendar = () => {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            {/* Dias da semana */}
-                            <div className="grid grid-cols-7 gap-px mb-px">
+                            <div className="dark:text-gray-400 grid grid-cols-7 gap-px mb-px">
                                 {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
                                     <div
                                         key={day}
@@ -199,7 +233,6 @@ export const AcademicCalendar = () => {
                                     </div>
                                 ))}
                             </div>
-                            {/* Grade do calendário */}
                             <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
                                 {renderCalendar()}
                             </div>
@@ -207,7 +240,6 @@ export const AcademicCalendar = () => {
                     </SubCard>
                 </div>
 
-                {/* Eventos do dia selecionado */}
                 <div className="lg:col-span-1">
                     <SubCard>
                         <CardHeader>
@@ -216,23 +248,26 @@ export const AcademicCalendar = () => {
                                 {selectedDate ? new Date(selectedDate).toLocaleDateString('pt-BR') : 'Eventos'}
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className='p-0'>
                             {selectedDate ? (
                                 <div className="space-y-4">
-                                    {mockEvents
+                                    {events
                                         .filter(event => event.date === selectedDate)
                                         .map(event => (
                                             <div
                                                 key={event.id}
-                                                className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
+                                                className="p-5 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
                                             >
                                                 <div className="flex items-start justify-between">
                                                     <EventTypeTag type={event.type} />
-                                                    <button className="text-gray-400 hover:text-gray-500">
+                                                    <button
+                                                        onClick={() => handleDeleteEvent(event.id)}
+                                                        className="text-gray-400 hover:text-gray-500"
+                                                    >
                                                         <X className="w-4 h-4" />
                                                     </button>
                                                 </div>
-                                                <h3 className="mt-2 font-medium">{event.title}</h3>
+                                                <h3 className="mt-2 font-medium dark:text-gray-400">{event.title}</h3>
                                                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                     {event.description}
                                                 </p>
