@@ -14,7 +14,6 @@ import { ProtectedRoute } from './Components/ProtectedRoute/index.jsx';
 import { ThemeProvider } from './Contexts/ThemeContext.jsx';
 import { UserPage } from './Routes/UserPage/index.jsx';
 import { PresenceHistory } from './Routes/Presence/PresenceHistory/index.jsx';
-import { History } from './Routes/History/index.jsx';
 import { Grades } from './Routes/Grades/index.jsx';
 
 const ProtectedLayout = () => {
