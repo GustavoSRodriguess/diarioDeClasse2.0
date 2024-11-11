@@ -9,8 +9,12 @@ import (
 var DB *gorm.DB
 
 type Student struct {
-	ID    uint   `json:"id" gorm:"primary_key"`
-	Nome  string `json:"nome"`
-	Email string `json:"email"`
-	Senha string `json:"-"`
+    ID        uint      `json:"id" gorm:"primary_key"`
+    Name      string    `json:"name" binding:"required"`
+    Email     string    `json:"email" binding:"required,email" gorm:"unique"`
+    Password  string    `json:"-" binding:"required,min=6"`
+    Classes   []Class   `json:"classes" gorm:"many2many:class_students;"`
+    Grades    []Grade   `json:"grades" gorm:"foreignKey:StudentID"`
+    CreatedAt time.Time `json:"created_at"`
+    UpdatedAt time.Time `json:"updated_at"`
 }
