@@ -39,7 +39,7 @@ export const Modal = ({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50"
+            className="dark:text-gray-300 fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50"
             onClick={handleBackdropClick}
         >
             <div
