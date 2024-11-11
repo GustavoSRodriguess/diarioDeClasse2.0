@@ -115,11 +115,11 @@ export default function Header() {
               </li>
               <li>
                 <button
-                  onClick={() => navigate('/consultar')}
+                  onClick={() => navigate('/grades')}
                   className="text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 
                            px-4 py-2 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors"
                 >
-                  Consultar Aulas Anteriores
+                  Consultar Notas
                 </button>
               </li>
               <li>

@@ -14,6 +14,8 @@ import { ProtectedRoute } from './Components/ProtectedRoute/index.jsx';
 import { ThemeProvider } from './Contexts/ThemeContext.jsx';
 import { UserPage } from './Routes/UserPage/index.jsx';
 import { PresenceHistory } from './Routes/Presence/PresenceHistory/index.jsx';
+import { History } from './Routes/History/index.jsx';
+import { Grades } from './Routes/Grades/index.jsx';
 
 const ProtectedLayout = () => {
   return (
@@ -40,6 +42,7 @@ root.render(
             <Route element={<ProtectedLayout/>}>
               <Route path='/' element={<Home />}/>
               <Route path='/profile' element={<UserPage />}/>
+              <Route path='/grades' element={<Grades />}/>
               <Route path='/presence' element={<Presence />}/>
               <Route path='/presence/check' element={<PresenceCheck />}/>
               <Route path='/presence/history' element={<PresenceHistory />}/>

@@ -7,7 +7,7 @@ export default function Home(){
   return (
     <Page>
       <Dashboard />
-      <AcademicCalendar/>
+      <AcademicCalendar />
     </Page>
   )
 }
