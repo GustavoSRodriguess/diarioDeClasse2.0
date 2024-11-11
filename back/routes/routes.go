@@ -43,5 +43,15 @@ func SetupRoutes(r *gin.Engine) {
             grades.GET("/class/:id", controllers.ListarNotasPorClasse)
             grades.GET("/student/:id", controllers.ListarNotasPorAluno)
         }
+
+        events := r.Group("/events")
+        events.Use(middleware.RoleRequired("professor"))
+        {
+            events.POST("/", controllers.CriarEvento)
+            events.GET("/", controllers.ListarEventos)
+            events.GET("/:id", controllers.BuscarEvento)
+            events.PUT("/:id", controllers.AtualizarEvento)
+            events.DELETE("/:id", controllers.DeletarEvento)
+        }
     }
 }
