@@ -45,7 +45,11 @@ export const Modal = ({
             <div
                 className={`
                     relative w-full ${sizeClasses[size]} 
-                    bg-[#1a1f2d] border border-gray-700
+                    dark:bg-[#1a1f2d] 
+                    dark:border-gray-700
+                    bg-offWhite
+                    border
+                    border-gray-300
                     rounded-lg shadow-lg 
                     my-8 mx-auto
                     max-h-[90vh] overflow-hidden
@@ -55,9 +59,9 @@ export const Modal = ({
                 {/* Header com fundo escuro que cobre toda a largura */}
                 {title && (
                     <div className="sticky top-0 z-10">
-                        <div className="absolute inset-0 bg-[#1a1f2d] border-b border-gray-700" />
+                        <div className="absolute inset-0 dark:bg-[#1a1f2d] border-b dark:border-gray-700 border-gray-500" />
                         <div className="relative flex items-center justify-between p-4">
-                            <h2 className="text-lg font-semibold text-gray-100">
+                            <h2 className="text-lg font-semibold dark:text-gray-100">
                                 {title}
                             </h2>
                             {showClose && (
@@ -73,7 +77,7 @@ export const Modal = ({
                 )}
 
                 {/* Conteúdo com scroll independente */}
-                <div className="overflow-y-auto max-h-[calc(90vh-5rem)] scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-gray-800">
+                <div className="overflow-y-auto max-h-[calc(90vh-5rem)] scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-gray-800 dark:bg-[#1a1f2d] bg-offWhite">
                     <div className="p-4">
                         {children}
                     </div>

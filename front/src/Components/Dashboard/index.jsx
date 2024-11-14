@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Users, BookOpen, AlertCircle, Clock, BarChart3, FileText, CheckCircle2 } from 'lucide-react';
 import { Card } from '../Generic/Card';
+import { StartClassModal } from './subComponents/StartClassModal';
 
 const Dashboard = () => {
+    const [isStartClassModalOpen, setIsStartClassModalOpen] = useState(false);
     const cards = [
         {
             title: "Chamada",
@@ -73,19 +75,31 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className="dark:bg-gray-900 p-6 space-y-6 bg-gray-50 min-h-screen">
-
+        <div className="dark:bg-gray-900 p-6 space-y-6 bg-gray-50">
             {/* header de boas vindas */}
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="dark:text-gray-200 text-2xl font-bold text-gray-800">Bom dia, (nome do professor)!</h1>
-                    <p className="dark:text-gray-400 text-gray-600">Terça-feira, 5 de Novembro</p>
+                    <h1 className="dark:text-gray-200 text-2xl font-bold text-gray-800">
+                        Bom dia, (nome do professor)!
+                    </h1>
+                    <p className="dark:text-gray-400 text-gray-600">
+                        Terça-feira, 5 de Novembro
+                    </p>
                 </div>
-                <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
+                <button
+                    onClick={() => setIsStartClassModalOpen(true)}
+                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2"
+                >
                     <Clock className="w-4 h-4" />
                     Iniciar Aula
                 </button>
             </div>
+
+            {/* Modal de Iniciar Aula */}
+            <StartClassModal
+                isOpen={isStartClassModalOpen}
+                onClose={() => setIsStartClassModalOpen(false)}
+            />
 
             {/* cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -11,6 +11,8 @@
 # production
 /build
 
+/src/Routes/History
+/src/Components/History/
 # misc
 .DS_Store
 .env.local

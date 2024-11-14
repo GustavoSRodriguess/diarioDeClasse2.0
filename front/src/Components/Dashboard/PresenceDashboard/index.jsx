@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, Users, FileText, Search, Eye } from 'lucide-react';
 import { SubCard, CardContent, CardHeader, CardTitle } from "../../Generic/Card/SubCard";
+import { ClassCard } from './subComponents/ClassCard';
+import { ClassDetails } from './subComponents/ClassDetails';
 
 export const PreviousClasses = () => {
     const [selectedMonth, setSelectedMonth] = useState('');
     const [selectedClass, setSelectedClass] = useState('');
+    const [selectedClassDetails, setSelectedClassDetails] = useState(null);
 
     //mock
     const classes = [
@@ -29,6 +32,10 @@ export const PreviousClasses = () => {
             observations: "Exercícios em grupo"
         },
     ];
+
+    const handleViewDetails = (classItem) => {
+        setSelectedClassDetails(classItem);
+    }
 
     return (
         <div className="container mx-auto p-6 max-w-6xl">
@@ -91,58 +98,19 @@ export const PreviousClasses = () => {
 
             <div className="space-y-4">
                 {classes.map((classItem, index) => (
-                    <SubCard key={index}>
-                        <CardContent className="pt-6">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between">
-                                <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-3 md:gap-8 flex-grow">
-                                    {/* Data e Hora */}
-                                    <div className="flex items-start gap-3">
-                                        <Calendar className="w-5 h-5 text-purple-600 mt-1" />
-                                        <div>
-                                            <p className="font-medium text-gray-900 dark:text-gray-100">
-                                                {new Date(classItem.date).toLocaleDateString('pt-BR')}
-                                            </p>
-                                            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                                <Clock className="w-4 h-4" />
-                                                {classItem.time}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start gap-3">
-                                        <FileText className="w-5 h-5 text-purple-600 mt-1" />
-                                        <div>
-                                            <p className="font-medium text-gray-900 dark:text-gray-100">
-                                                {classItem.class} - {classItem.subject}
-                                            </p>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                {classItem.content}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start gap-3">
-                                        <Users className="w-5 h-5 text-purple-600 mt-1" />
-                                        <div>
-                                            <p className="font-medium text-gray-900 dark:text-gray-100">
-                                                Presenças: {classItem.presentStudents}/{classItem.totalStudents}
-                                            </p>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                {classItem.observations}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button className="mt-6 md:mt-0 ml-0 md:ml-4 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center gap-2">
-                                    <Eye className="w-4 h-4" />
-                                    Ver Detalhes
-                                </button>
-                            </div>
-                        </CardContent>
-                    </SubCard>
+                    <ClassCard
+                        key={index}
+                        classItem={classItem}
+                        onViewDetails={handleViewDetails}
+                    />
                 ))}
             </div>
+
+            <ClassDetails
+                isOpen={!!selectedClassDetails}
+                onClose={() => setSelectedClassDetails(null)}
+                classData={selectedClassDetails}
+            />
         </div>
     );
 };
