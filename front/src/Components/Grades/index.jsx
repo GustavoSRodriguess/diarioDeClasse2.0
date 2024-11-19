@@ -1,4 +1,3 @@
-// index.jsx
 import React from 'react';
 import { GraduationCap, Plus } from 'lucide-react';
 import { useGrades } from './hooks/useGrades';
