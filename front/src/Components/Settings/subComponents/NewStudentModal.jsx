@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from '../../Generic/Modal';
 import { User } from 'lucide-react';
 
-export const NewStudentModal = ({ isOpen, onClose, onSave }) => {
+export const NewStudentModal = ({ isOpen, onClose, classData, onSave }) => {
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        registration: '',
-        birthDate: '',
-        phone: '',
-        parentName: '',
-        parentPhone: ''
+        nome: '',
+        turmaId: 1,
     });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState('');
+
+    // Atualiza turmaId sempre que classData mudar e estiver disponível
+    useEffect(() => {
+        if (classData && classData.id) {
+            setFormData((prev) => ({
+                ...prev,
+                turmaId: classData.id,
+            }));
+        }
+    }, [classData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,13 +29,50 @@ export const NewStudentModal = ({ isOpen, onClose, onSave }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSave({
-            ...formData,
-            id: Date.now() // temporário, normalmente viria do backend
-        });
-        onClose();
+        setIsSubmitting(true);
+        setError('');
+
+        // Validação dos dados necessários
+        if (!formData.nome || !formData.turmaId) {
+            setError('Por favor, preencha todos os campos obrigatórios.');
+            setIsSubmitting(false);
+            return;
+        }
+
+        // Extrair apenas os campos necessários para o cadastro
+        const cadastroData = {
+            nome: formData.nome,
+            numFaltas: 0, // Valor padrão
+            status: 1, // Valor padrão (Ex: 1 para ativo, ajuste conforme necessário)
+            turmaId: formData.turmaId,
+        };
+
+        try {
+            // Fazendo uma requisição POST para adicionar o aluno ao banco de dados
+            const response = await fetch(`/turmas/${cadastroData.turmaId}/alunos`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cadastroData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao cadastrar aluno');
+            }
+
+            const data = await response.json();
+
+            onSave(data); // Passa o aluno salvo ao componente pai para atualizar a lista
+            onClose();
+        } catch (err) {
+            console.error('Erro ao cadastrar aluno:', err);
+            setError('Erro ao cadastrar aluno. Tente novamente mais tarde.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -44,59 +89,15 @@ export const NewStudentModal = ({ isOpen, onClose, onSave }) => {
                         <h3 className="font-medium">Informações Básicas</h3>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Nome Completo
                             </label>
                             <input
                                 type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                                className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Matrícula
-                            </label>
-                            <input
-                                type="text"
-                                name="registration"
-                                value={formData.registration}
-                                onChange={handleChange}
-                                required
-                                className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Data de Nascimento
-                            </label>
-                            <input
-                                type="date"
-                                name="birthDate"
-                                value={formData.birthDate}
+                                name="nome"
+                                value={formData.nome}
                                 onChange={handleChange}
                                 required
                                 className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
@@ -105,56 +106,11 @@ export const NewStudentModal = ({ isOpen, onClose, onSave }) => {
                     </div>
                 </div>
 
-                <div className="space-y-4">
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Informações de Contato
-                    </h3>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Telefone do Aluno
-                        </label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                            placeholder="(00) 00000-0000"
-                        />
+                {error && (
+                    <div className="text-red-600 text-sm">
+                        {error}
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Nome do Responsável
-                            </label>
-                            <input
-                                type="text"
-                                name="parentName"
-                                value={formData.parentName}
-                                onChange={handleChange}
-                                required
-                                className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Telefone do Responsável
-                            </label>
-                            <input
-                                type="tel"
-                                name="parentPhone"
-                                value={formData.parentPhone}
-                                onChange={handleChange}
-                                required
-                                className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                                placeholder="(00) 00000-0000"
-                            />
-                        </div>
-                    </div>
-                </div>
+                )}
 
                 <div className="flex justify-end gap-2 pt-4">
                     <button
@@ -166,9 +122,10 @@ export const NewStudentModal = ({ isOpen, onClose, onSave }) => {
                     </button>
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                        disabled={isSubmitting}
+                        className={`px-4 py-2 ${isSubmitting ? 'bg-purple-400' : 'bg-purple-600'} text-white rounded-md hover:bg-purple-700`}
                     >
-                        Cadastrar Aluno
+                        {isSubmitting ? 'Cadastrando...' : 'Cadastrar Aluno'}
                     </button>
                 </div>
             </form>

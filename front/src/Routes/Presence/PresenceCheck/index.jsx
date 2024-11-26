@@ -6,79 +6,93 @@ import { Page } from '../../../Components/Generic/Page';
 const MAX_ABSENCES = 15;
 
 //mock só pra testar enquanto n tem o bd
-const mockStudentsByClass = {
-    'A': [
-        {
-            id: 1,
-            number: "01",
-            name: "Shaolin Matador de porco",
-            absences: 3,
-            present: false
-        },
-        {
-            id: 2,
-            number: "02",
-            name: "Favin do pneu",
-            absences: 12,
-            present: false
-        }
-    ],
-    'B': [
-        {
-            id: 3,
-            number: "01",
-            name: "João Silva",
-            absences: 5,
-            present: false
-        },
-        {
-            id: 4,
-            number: "02",
-            name: "Maria Santos",
-            absences: 8,
-            present: false
-        }
-    ],
-    'C': [
-        {
-            id: 5,
-            number: "01",
-            name: "Pedro Costa",
-            absences: 2,
-            present: false
-        },
-        {
-            id: 6,
-            number: "02",
-            name: "Ana Oliveira",
-            absences: 14,
-            present: false
-        }
-    ]
-};
+// const mockStudentsByClass = {
+//     'A': [
+//         {
+//             id: 1,
+//             number: "01",
+//             name: "Shaolin Matador de porco",
+//             absences: 3,
+//             present: false
+//         },
+//         {
+//             id: 2,
+//             number: "02",
+//             name: "Favin do pneu",
+//             absences: 12,
+//             present: false
+//         }
+//     ],
+//     'B': [
+//         {
+//             id: 3,
+//             number: "01",
+//             name: "João Silva",
+//             absences: 5,
+//             present: false
+//         },
+//         {
+//             id: 4,
+//             number: "02",
+//             name: "Maria Santos",
+//             absences: 8,
+//             present: false
+//         }
+//     ],
+//     'C': [
+//         {
+//             id: 5,
+//             number: "01",
+//             name: "Pedro Costa",
+//             absences: 2,
+//             present: false
+//         },
+//         {
+//             id: 6,
+//             number: "02",
+//             name: "Ana Oliveira",
+//             absences: 14,
+//             present: false
+//         }
+//     ]
+// };
 
-export const PresenceCheck = ({ classId = 'A' }) => {
+export const PresenceCheck = ({id = 1}) => {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchStudentsData = async (classId) => {
+    const fetchStudentsData = async (id) => {
+        setLoading(true); // Ativa o estado de carregamento
         try {
-            setLoading(true);
-           // await new Promise(resolve => setTimeout(resolve, 1000));
-            const data = mockStudentsByClass[classId] || [];
-            setStudents(data);
-            setError(null);
+            // Fazendo a requisição para o endpoint com a URL relativa (utilizando proxy em package.json)
+            const response = await fetch(`/turmas/${id}`);
+    
+            // Verifica se a resposta foi bem-sucedida
+            if (!response.ok) {
+                throw new Error('Falha ao buscar dados da turma');
+            }
+    
+            // Converte a resposta para JSON
+            const data = await response.json();
+    
+            // Acessa a lista de alunos do objeto retornado
+            const studentsData = data.alunos || []; // Garante que seja um array
+    
+            setStudents(studentsData); // Atualiza o estado dos alunos
+            setError(null); // Remove qualquer mensagem de erro
         } catch (err) {
+            console.error('Erro ao buscar os dados dos alunos:', err); // Log para depuração
             setError('Erro ao carregar dados dos alunos. Tente novamente mais tarde.');
+            setStudents([]); // Define como array vazio em caso de erro para evitar problemas com .map()
         } finally {
-            setLoading(false);
+            setLoading(false); // Desativa o estado de carregamento
         }
     };
 
     useEffect(() => {
-        fetchStudentsData(classId);
-    }, [classId]);
+        fetchStudentsData(id);
+    }, [id]);
 
     const handleAttendance = (studentId, isPresent) => {
         setStudents(students.map(student => {
@@ -86,7 +100,7 @@ export const PresenceCheck = ({ classId = 'A' }) => {
                 return {
                     ...student,
                     present: isPresent,
-                    absences: isPresent ? student.absences : student.absences + 1
+                    numFaltas: isPresent ? student.numFaltas : student.numFaltas + 1 // Ajustando para numFaltas
                 };
             }
             return student;
@@ -109,7 +123,7 @@ export const PresenceCheck = ({ classId = 'A' }) => {
         return (
             <Page>
                 <div className="flex items-center justify-center min-h-[calc(100vh-72px)]">
-                    <div className="text-purple-700">Carregando dados da turma {classId}...</div>
+                    <div className="text-purple-700">Carregando dados da turma {id}...</div>
                 </div>
             </Page>
         );
@@ -129,7 +143,7 @@ export const PresenceCheck = ({ classId = 'A' }) => {
         <Page>
             <div className="flex flex-col min-h-[calc(100vh-72px)]">
                 <div className="mt-5 flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-purple-700">Turma {classId}</h2>
+                    <h2 className="text-2xl font-bold text-purple-700">Turma {id}</h2>
                     <div className="dark:text-gray-300 text-sm text-gray-600">
                         Total de alunos: {students.length}
                     </div>
@@ -149,7 +163,7 @@ export const PresenceCheck = ({ classId = 'A' }) => {
                             </TableHeader>
                             <TableBody>
                                 {students.map((student) => {
-                                    const failed = hasFailed(student.absences);
+                                    const failed = hasFailed(student.numFaltas); // Ajuste para numFaltas
                                     return (
                                         <TableRow
                                             key={student.id}
@@ -157,17 +171,17 @@ export const PresenceCheck = ({ classId = 'A' }) => {
                                             className={`${!failed ? 'cursor-pointer hover:bg-purple-50' : 'cursor-not-allowed bg-gray-50'} 
                                                       transition-colors duration-150 ease-in-out`}
                                         >
-                                            <TableCell>{student.number}</TableCell>
-                                            <TableCell>{student.name}</TableCell>
+                                            <TableCell>{student.id}</TableCell>
+                                            <TableCell>{student.nome}</TableCell>
                                             <TableCell align="center">
                                                 <div className='flex justify-center'>
                                                     <span className={`font-bold justify-center ${failed
                                                         ? 'text-red-500'
-                                                        : isAtRisk(student.absences)
+                                                        : isAtRisk(student.numFaltas)
                                                             ? 'text-yellow-500'
                                                             : 'text-purple-500'
                                                         }`}>
-                                                        {student.absences}
+                                                        {student.numFaltas} {/* Ajuste para numFaltas */}
                                                     </span>
                                                 </div>
                                             </TableCell>
@@ -177,7 +191,7 @@ export const PresenceCheck = ({ classId = 'A' }) => {
                                                         <AlertCircle className="h-4 w-4 mr-1" />
                                                         Reprovado por Falta
                                                     </Badge>
-                                                ) : isAtRisk(student.absences) ? (
+                                                ) : isAtRisk(student.numFaltas) ? (
                                                     <Badge variant="warning" className="gap-1">
                                                         <AlertCircle className="h-4 w-4 mr-1" />
                                                         Em Risco
