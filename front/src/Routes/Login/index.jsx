@@ -11,33 +11,50 @@ export default function Login() {
   const [error, setError] = useState('');
 
   const handleSubmit = async (formData) => {
+    if (!formData.email) {
+      setError('Por favor, insira seu email');
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError('');
-      await login(formData.email, formData.password);
+      await login(formData.email);
 
       const from = location.state?.from?.pathname || '/';
       navigate(from, { replace: true });
     } catch (err) {
-      setError('Email ou senha inválidos');
+      setError(err.message || 'Email não encontrado');
     } finally {
       setIsLoading(false);
     }
   };
 
   const fields = [
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'password', label: 'Senha', type: 'password', required: true }
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      required: true,
+      placeholder: 'Seu email'
+    },
+    {
+      name: 'pwd',
+      label: 'Senha',
+      type: 'password',
+      required: true,
+      placeholder: 'Sua Senha'
+    }
   ];
 
   return (
-      <ReusableForm
-        title="Entrar no Sistema"
-        fields={fields}
-        onSubmit={handleSubmit}
-        error={error}
-        isLoading={isLoading}
-        submitText="Entrar"
-      />
+    <ReusableForm
+      title="Entrar no Sistema"
+      fields={fields}
+      onSubmit={handleSubmit}
+      error={error}
+      isLoading={isLoading}
+      submitText={isLoading ? "Entrando..." : "Entrar"}
+    />
   );
 }

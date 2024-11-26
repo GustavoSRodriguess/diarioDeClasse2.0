@@ -1,48 +1,60 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
+const API_URL = '/professores';;
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('auth_token');
         const savedUser = localStorage.getItem('auth_user');
-
-        if (token && savedUser) {
+        if (savedUser) {
             setUser(JSON.parse(savedUser));
         }
-
         setLoading(false);
     }, []);
 
-    const login = async (email, password) => {
+    const login = async (email) => {
         try {
-            // simula uma resposta da api
-            const mockApiResponse = {
-                token: 'fake-token-123',
-                user: {
-                    id: 1,
-                    name: 'Usuário Teste',
-                    email: email,
-                    role: 'professor'
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                mode: 'cors',  // Explicitamente definindo o modo
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Erro ao conectar com o servidor');
+            }
+    
+            const professors = await response.json();
+            const professor = professors.find(prof => prof.email === email);
+    
+            if (!professor) {
+                throw new Error('Email não encontrado');
+            }
+    
+            const userData = {
+                id: professor.id,
+                name: professor.nome,
+                email: professor.email,
+                role: 'professor'
             };
-
-            localStorage.setItem('auth_token', mockApiResponse.token);
-            localStorage.setItem('auth_user', JSON.stringify(mockApiResponse.user));
-
-            setUser(mockApiResponse.user);
+    
+            localStorage.setItem('auth_user', JSON.stringify(userData));
+            setUser(userData);
             return true;
         } catch (error) {
             console.error('Erro no login:', error);
-            throw new Error('Email ou senha inválidos');
+            throw new Error(error.message || 'Erro ao realizar login');
         }
     };
 
     const logout = () => {
-        localStorage.removeItem('auth_token');
         localStorage.removeItem('auth_user');
         setUser(null);
     };
@@ -69,3 +81,5 @@ export const useAuth = () => {
     }
     return context;
 };
+
+export default AuthContext;
