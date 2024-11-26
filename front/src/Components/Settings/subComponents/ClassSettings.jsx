@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { SubCard, CardContent, CardHeader, CardTitle } from "../../Generic/Card/SubCard";
-import { School, Plus, Edit2, Trash2 } from 'lucide-react';
-import { Modal } from '../../Generic/Modal';
+import { SubCard, CardContent } from "../../Generic/Card/SubCard";
+import { School, Plus, Edit2, Trash2, Users } from 'lucide-react';
 import { EditClassModal } from './EditClassModal';
+import { ClassStudentsModal } from './ClassStudentsModal';
 
 export const ClassSettings = () => {
-    const [showNewClassModal, setShowNewClassModal] = useState(false);
     const [editingClass, setEditingClass] = useState(null);
-
+    const [managingStudentsFor, setManagingStudentsFor] = useState(null);
     const [classes, setClasses] = useState([
-        { id: 1, name: "7º Ano A", period: "Manhã", year: 2024 },
-        { id: 2, name: "7º Ano B", period: "Tarde", year: 2024 },
+        { id: 1, name: "7º Ano A", period: "Manhã", year: 2024, students: [] },
+        { id: 2, name: "7º Ano B", period: "Tarde", year: 2024, students: [] },
     ]);
 
     const handleSaveEdit = (updatedClass) => {
@@ -22,6 +21,17 @@ export const ClassSettings = () => {
         setEditingClass(null);
     };
 
+    const handleSaveStudents = (students) => {
+        setClasses(prev => 
+            prev.map(classItem => 
+                classItem.id === managingStudentsFor?.id 
+                    ? { ...classItem, students } 
+                    : classItem
+            )
+        );
+        setManagingStudentsFor(null);
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -29,26 +39,19 @@ export const ClassSettings = () => {
                     Turmas Cadastradas
                 </h2>
                 <button
-                    onClick={() => setShowNewClassModal(true)}
-                    className="bg-purple-600 text-white px-4 py-2 mt-5 rounded-lg hover:bg-purple-700 flex items-center gap-2"
+                    onClick={() => setEditingClass({})}
+                    className="bg-purple-600 text-white px-4 mt-5 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2"
                 >
                     <Plus className="w-4 h-4" />
                     Nova Turma
                 </button>
-
-                <EditClassModal
-                isOpen={!!editingClass}
-                onClose={() => setEditingClass(null)}
-                classData={editingClass}
-                onSave={handleSaveEdit}
-                />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {classes.map((classItem) => (
                     <SubCard key={classItem.id}>
                         <CardContent className='pt-6'>
-                            <div className="flex justify-between items-cednter">
+                            <div className="flex justify-between items-center">
                                 <div className="flex items-start gap-3">
                                     <School className="w-5 h-5 text-purple-600 mt-1" />
                                     <div>
@@ -58,20 +61,32 @@ export const ClassSettings = () => {
                                         <p className="text-sm text-gray-500 dark:text-gray-400">
                                             {classItem.period} • {classItem.year}
                                         </p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            {classItem.students?.length || 0} alunos
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 text-purple-600">
+                                    <button
+                                        onClick={() => setManagingStudentsFor(classItem)}
+                                        className="p-1 hover:bg-purple-100 dark:hover:bg-purple-900/20 rounded-full "
+                                        title="Gerenciar Alunos"
+                                    >
+                                        <Users className="w-4 h-4" />
+                                    </button>
                                     <button
                                         onClick={() => setEditingClass(classItem)}
                                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+                                        title="Editar Turma"
                                     >
-                                        <Edit2 className="w-4 h-4 text-gray-500" />
+                                        <Edit2 className="w-4 h-4 " />
                                     </button>
                                     <button
                                         onClick={() => {/* Implementar delete */}}
                                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+                                        title="Excluir Turma"
                                     >
-                                        <Trash2 className="w-4 h-4 text-gray-500" />
+                                        <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
@@ -80,62 +95,20 @@ export const ClassSettings = () => {
                 ))}
             </div>
 
-            <Modal
-                isOpen={showNewClassModal}
-                onClose={() => setShowNewClassModal(false)}
-                title="Nova Turma"
-            >
-                <form className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Nome da Turma
-                        </label>
-                        <input
-                            type="text"
-                            className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                            placeholder="Ex: 7º Ano A"
-                        />
-                    </div>
+            {/* Modais */}
+            <EditClassModal
+                isOpen={!!editingClass}
+                onClose={() => setEditingClass(null)}
+                classData={editingClass}
+                onSave={handleSaveEdit}
+            />
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Período
-                        </label>
-                        <select className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700">
-                            <option value="Manhã">Manhã</option>
-                            <option value="Tarde">Tarde</option>
-                            <option value="Noite">Noite</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Ano Letivo
-                        </label>
-                        <input
-                            type="number"
-                            className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                            placeholder="Ex: 2024"
-                        />
-                    </div>
-
-                    <div className="flex justify-end gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setShowNewClassModal(false)}
-                            className="px-4 py-2 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
-                        >
-                            Cancelar
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
-                        >
-                            Salvar
-                        </button>
-                    </div>
-                </form>
-            </Modal>
+            <ClassStudentsModal
+                isOpen={!!managingStudentsFor}
+                onClose={() => setManagingStudentsFor(null)}
+                classData={managingStudentsFor}
+                onSave={handleSaveStudents}
+            />
         </div>
     );
 };
