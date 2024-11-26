@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// Configurar as credenciais de conexão com o PostgreSQL
-	dsn := "<sua url>"
+	dsn := "sua url"
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -20,15 +20,18 @@ func main() {
 
 	// Migrar o modelo e associar o banco ao pacote models
 	database.AutoMigrate(&models.Professor{})
+	database.AutoMigrate(&models.Turma{})
+	database.AutoMigrate(&models.Aluno{})
 	models.DB = database
 
 	// Iniciar o servidor Gin
 	r := gin.Default()
 
 	// Configurar rotas
-	routes.SetupRoutes(r)
+	routes.SetupRoutes(r, database)
 
 	// Rodar o servidor
 	fmt.Println("Servidor rodando na porta 8080...")
+	fmt.Println("http://localhost:8080")
 	r.Run(":8080")
 }

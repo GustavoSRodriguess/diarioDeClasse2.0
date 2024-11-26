@@ -245,7 +245,7 @@ export const AcademicCalendar = () => {
                         <CardHeader>
                             <CardTitle className="text-lg flex items-center gap-2">
                                 <CalendarIcon className="w-5 h-5" />
-                                {selectedDate ? new Date(selectedDate).toLocaleDateString('pt-BR') : 'Eventos'}
+                                {selectedDate ? new Date(new Date(selectedDate).setDate(new Date(selectedDate).getDate() + 1)).toLocaleDateString('pt-BR') : 'Eventos'}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className='p-0'>
