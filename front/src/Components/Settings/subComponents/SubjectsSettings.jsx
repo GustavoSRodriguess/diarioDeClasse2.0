@@ -43,18 +43,18 @@ export const SubjectsSettings = () => {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex gap-2 items-center">
+                                <div className="flex gap-2 items-center text-purple-600">
                                     <button
                                         onClick={() => setEditingSubject(subject)}
                                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
                                     >
-                                        <Edit2 className="w-4 h-4 text-gray-500" />
+                                        <Edit2 className="w-4 h-4" />
                                     </button>
                                     <button
                                         onClick={() => {/* aqui fica a logica do delete */}}
                                         className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
                                     >
-                                        <Trash2 className="w-4 h-4 text-gray-500" />
+                                        <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
