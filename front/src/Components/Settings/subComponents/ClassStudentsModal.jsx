@@ -1,18 +1,17 @@
-// components/Settings/Components/ClassStudentsModal.jsx
 import React, { useState } from 'react';
 import { Modal } from '../../Generic/Modal';
 import { Users, Search, UserPlus, X } from 'lucide-react';
 import { Badge } from '../../Generic/Table';
+import { NewStudentModal } from './NewStudentModal';
 
 export const ClassStudentsModal = ({ isOpen, onClose, classData, onSave }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [showNewStudentModal, setShowNewStudentModal] = useState(false);
 
-    // Mock de todos os alunos disponíveis
     const [allStudents] = useState([
         { id: 1, name: "Ana Silva", email: "ana@escola.com" },
         { id: 2, name: "João Pedro", email: "joao@escola.com" },
         { id: 3, name: "Maria Santos", email: "maria@escola.com" },
-        // ... mais alunos
     ]);
 
     // Mock de alunos já na turma
@@ -49,6 +48,12 @@ export const ClassStudentsModal = ({ isOpen, onClose, classData, onSave }) => {
         onClose();
     };
 
+    const handleNewStudent = (newStudent) => {
+        allStudents.push(newStudent);
+        handleAddStudent(newStudent);
+        setShowNewStudentModal(false);
+    }
+
     return (
         <Modal
             isOpen={isOpen}
@@ -80,6 +85,13 @@ export const ClassStudentsModal = ({ isOpen, onClose, classData, onSave }) => {
                     <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Adicionar Alunos
                     </h4>
+                    <button
+                        onClick={() => setShowNewStudentModal(true)}
+                        className="text-sm text-purple-600 hover:text-purple-700 flex items-center gap-1"
+                    >
+                        <UserPlus className="w-4 h-4" />
+                        Novo Aluno
+                    </button>
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
@@ -173,6 +185,11 @@ export const ClassStudentsModal = ({ isOpen, onClose, classData, onSave }) => {
                         Salvar Alterações
                     </button>
                 </div>
+                <NewStudentModal
+                    isOpen={showNewStudentModal}
+                    onClose={() => setShowNewStudentModal(false)}
+                    onSave={handleNewStudent}
+                />
             </div>
         </Modal>
     );
