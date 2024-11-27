@@ -5,58 +5,6 @@ import { Page } from '../../../Components/Generic/Page';
 
 const MAX_ABSENCES = 15;
 
-//mock só pra testar enquanto n tem o bd
-// const mockStudentsByClass = {
-//     'A': [
-//         {
-//             id: 1,
-//             number: "01",
-//             name: "Shaolin Matador de porco",
-//             absences: 3,
-//             present: false
-//         },
-//         {
-//             id: 2,
-//             number: "02",
-//             name: "Favin do pneu",
-//             absences: 12,
-//             present: false
-//         }
-//     ],
-//     'B': [
-//         {
-//             id: 3,
-//             number: "01",
-//             name: "João Silva",
-//             absences: 5,
-//             present: false
-//         },
-//         {
-//             id: 4,
-//             number: "02",
-//             name: "Maria Santos",
-//             absences: 8,
-//             present: false
-//         }
-//     ],
-//     'C': [
-//         {
-//             id: 5,
-//             number: "01",
-//             name: "Pedro Costa",
-//             absences: 2,
-//             present: false
-//         },
-//         {
-//             id: 6,
-//             number: "02",
-//             name: "Ana Oliveira",
-//             absences: 14,
-//             present: false
-//         }
-//     ]
-// };
-
 export const PresenceCheck = ({id = 1}) => {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -168,7 +116,7 @@ export const PresenceCheck = ({id = 1}) => {
                                         <TableRow
                                             key={student.id}
                                             onClick={() => !failed && handleAttendance(student.id, !student.present)}
-                                            className={`${!failed ? 'cursor-pointer hover:bg-purple-50' : 'cursor-not-allowed bg-gray-50'} 
+                                            className={`${!failed ? 'cursor-pointer hover:bg-purple-50' : 'cursor-not-allowed hover:bg-gray-50'} 
                                                       transition-colors duration-150 ease-in-out`}
                                         >
                                             <TableCell>{student.id}</TableCell>

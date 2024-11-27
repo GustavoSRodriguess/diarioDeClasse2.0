@@ -28,6 +28,19 @@ export const ClassSettings = () => {
 
     const handleSaveEdit = async (updatedClass) => {
         try {
+            const classData = {
+                nome: updatedClass.nome,
+                codigo: updatedClass.codigo,
+                professorId: updatedClass.professorId || 1, // Using 1 as default professorId
+                professor: {
+                    id: 0,
+                    nome: "",
+                    email: "",
+                    turmas: null
+                },
+                alunos: updatedClass.alunos || []
+            };
+
             if (updatedClass.id) {
                 // Update existing class
                 await fetch(`https://diariodeclasse2-0.onrender.com/turmas/${updatedClass.id}`, {
@@ -36,9 +49,8 @@ export const ClassSettings = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        nome: updatedClass.nome,
-                        codigo: updatedClass.codigo,
-                        professorId: updatedClass.professorId || 0
+                        ...classData,
+                        id: updatedClass.id
                     })
                 });
             } else {
@@ -48,12 +60,7 @@ export const ClassSettings = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        nome: updatedClass.nome,
-                        codigo: updatedClass.codigo,
-                        professorId: updatedClass.professorId || 0,
-                        alunos: []
-                    })
+                    body: JSON.stringify(classData)
                 });
             }
             fetchClasses(); // Refresh the list
@@ -87,7 +94,10 @@ export const ClassSettings = () => {
                     },
                     body: JSON.stringify({
                         ...currentClass,
-                        alunos: students
+                        alunos: students.map(student => ({
+                            ...student,
+                            turmaId: classId
+                        }))
                     })
                 });
                 fetchClasses(); // Refresh the list
@@ -109,7 +119,18 @@ export const ClassSettings = () => {
                     Turmas Cadastradas
                 </h2>
                 <button
-                    onClick={() => setEditingClass({})}
+                    onClick={() => setEditingClass({
+                        nome: '',
+                        codigo: '',
+                        professorId: 1,
+                        professor: {
+                            id: 0,
+                            nome: "",
+                            email: "",
+                            turmas: null
+                        },
+                        alunos: []
+                    })}
                     className="bg-purple-600 text-white px-4 mt-5 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2"
                 >
                     <Plus className="w-4 h-4" />

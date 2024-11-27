@@ -4,20 +4,34 @@ import { School } from 'lucide-react';
 
 export const EditClassModal = ({ isOpen, onClose, classData, onSave }) => {
     const [formData, setFormData] = useState({
-        name: classData?.name || '',
-        period: classData?.period || '',
-        year: classData?.year || new Date().getFullYear()
+        nome: '',
+        codigo: '',
+        professorId: 1
     });
 
     useEffect(() => {
         if (classData) {
             setFormData({
-                name: classData.name,
-                period: classData.period,
-                year: classData.year
+                nome: classData.nome || '',
+                codigo: classData.codigo || '',
+                professorId: classData.professorId || 1,
+                id: classData.id
             });
         }
     }, [classData]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave({
+            ...formData,
+            professor: {
+                id: 0,
+                nome: "",
+                email: "",
+                turmas: null
+            }
+        });
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,80 +41,56 @@ export const EditClassModal = ({ isOpen, onClose, classData, onSave }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSave({ ...formData, id: classData.id });
-        onClose();
-    };
-
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title="Editar Turma"
+            title={classData?.id ? "Editar Turma" : "Nova Turma"}
         >
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
                         Nome da Turma
                     </label>
                     <input
                         type="text"
-                        name="name"
-                        value={formData.name}
+                        name="nome"
+                        value={formData.nome}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                        placeholder="Ex: 7º Ano A"
+                        placeholder="Ex: Matemática Avançada"
+                        className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400"
                         required
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Período
-                    </label>
-                    <select
-                        name="period"
-                        value={formData.period}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                        required
-                    >
-                        <option value="">Selecione um período</option>
-                        <option value="Manhã">Manhã</option>
-                        <option value="Tarde">Tarde</option>
-                        <option value="Noite">Noite</option>
-                    </select>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Ano Letivo
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                        Código da Turma
                     </label>
                     <input
-                        type="number"
-                        name="year"
-                        value={formData.year}
+                        type="text"
+                        name="codigo"
+                        value={formData.codigo}
                         onChange={handleChange}
-                        min={2024}
-                        max={2100}
-                        className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
+                        placeholder="Ex: MAT-ADV-2024"
+                        className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400"
                         required
                     />
                 </div>
 
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg space-y-2">
-                    <h4 className="text-sm font-medium text-purple-700 dark:text-purple-300">
+                {/* Preview section */}
+                <div className="mt-4 p-4 bg-gray-800/50 rounded-lg">
+                    <h4 className="text-sm font-medium text-gray-300 mb-2">
                         Preview da Turma
                     </h4>
-                    <div className="flex items-center gap-2">
-                        <School className="w-5 h-5 text-purple-600" />
+                    <div className="flex items-start gap-3">
+                        <School className="w-5 h-5 text-purple-500 mt-1" />
                         <div>
-                            <p className="font-medium text-gray-900 dark:text-gray-100">
-                                {formData.name || 'Nome da Turma'}
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {formData.period ? `${formData.period} • ${formData.year}` : 'Período e Ano'}
+                            <h3 className="font-medium text-gray-200">
+                                {formData.nome || 'Nome da Turma'}
+                            </h3>
+                            <p className="text-sm text-gray-400">
+                                {formData.codigo || 'Código da Turma'}
                             </p>
                         </div>
                     </div>
@@ -110,7 +100,7 @@ export const EditClassModal = ({ isOpen, onClose, classData, onSave }) => {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                        className="px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-md"
                     >
                         Cancelar
                     </button>
@@ -118,7 +108,7 @@ export const EditClassModal = ({ isOpen, onClose, classData, onSave }) => {
                         type="submit"
                         className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
                     >
-                        Salvar Alterações
+                        {classData?.id ? "Salvar Alterações" : "Criar"}
                     </button>
                 </div>
             </form>
